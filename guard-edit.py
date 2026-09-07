@@ -32,12 +32,16 @@ def main() -> None:
     path = str(tool_input.get("file_path", "")).strip()
     if not path:
         return
-    workspace = sys.argv[1] if len(sys.argv) > 1 else str(data.get("cwd") or os.getcwd())
+    workspace = (sys.argv[1] if len(sys.argv) > 1 else "") or str(data.get("cwd") or os.getcwd())
+    if not workspace or not os.path.isdir(workspace):
+        return
     candidate = os.path.expanduser(path)
     if not os.path.isabs(candidate):
         candidate = os.path.join(workspace, candidate)
     real = os.path.realpath(candidate)
     root = os.path.realpath(workspace)
+    if ".git" in real.split(os.sep):
+        return
     if real == root or real.startswith(root + os.sep):
         emit_allow(tool_input)
 
