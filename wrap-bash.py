@@ -4,7 +4,7 @@
 输入 (stdin): ZCode 钩子事件 JSON, 含 tool_name 和 tool_input.
 输出 (stdout): 带 updatedInput 的 allow 决定, 让命令免询问直接执行.
 以下两种情况不拦截, 交回默认权限流程: 模型显式请求提权 (dangerouslyDisableSandbox);
-命中敏感命令模式 (sudo/ssh 族/递归删除).
+命中敏感命令模式 (sudo/ssh 族).
 """
 
 import json
@@ -15,10 +15,7 @@ import sys
 
 PROFILE = os.path.expanduser("~/.zcode/hooks/workspace-write.sb")
 
-SENSITIVE = re.compile(
-    r"(^|[;&|]\s*)(sudo|ssh|scp|sftp|rsync|ssh-copy-id)\b"
-    r"|\brm\s+(-{1,2}[a-zA-Z-]+\s+)*-{1,2}[a-zA-Z]*r[a-zA-Z]*f?"
-)
+SENSITIVE = re.compile(r"(^|[;&|]\s*)(sudo|ssh|scp|sftp|rsync|ssh-copy-id)\b")
 
 
 def main() -> None:
