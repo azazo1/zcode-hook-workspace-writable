@@ -15,3 +15,5 @@
   (regex #"^/Users/[^/]+/\.npm/")
   (regex #"^/Users/[^/]+/\.local/share/uv/")
   (regex #"^/Users/[^/]+/Library/pnpm/"))
+(deny file-write*
+  (regex #"(^|/)\.git(/|$)"))
