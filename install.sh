@@ -11,8 +11,9 @@ mkdir -p "$DEST_DIR" "$(dirname -- "$CONFIG")"
 if [ "$SRC_DIR" != "$DEST_DIR" ]; then
   cp "$SRC_DIR/workspace-write.sb" "$DEST_DIR/workspace-write.sb"
   cp "$SRC_DIR/wrap-bash.py" "$DEST_DIR/wrap-bash.py"
+  cp "$SRC_DIR/guard-edit.py" "$DEST_DIR/guard-edit.py"
 fi
-chmod +x "$DEST_DIR/wrap-bash.py"
+chmod +x "$DEST_DIR/wrap-bash.py" "$DEST_DIR/guard-edit.py"
 
 python3 - "$CONFIG" <<'EOF'
 import json
@@ -33,7 +34,18 @@ fragment = {
                         "timeoutMs": 5000,
                     }
                 ],
-            }
+            },
+            {
+                "matcher": "Write|Edit",
+                "hooks": [
+                    {
+                        "type": "process",
+                        "command": os.path.expanduser("~/.zcode/hooks/guard-edit.py"),
+                        "args": ["${ZCODE_PROJECT_DIR}"],
+                        "timeoutMs": 5000,
+                    }
+                ],
+            },
         ]
     },
 }

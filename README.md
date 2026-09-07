@@ -4,9 +4,10 @@
 
 ## 原理
 
-- PreToolUse 钩子拦截所有 Bash 调用, 把命令包装成 `sandbox-exec -f workspace-write.sb -D WORKSPACE=<cwd> sh -c '<原命令>'`, 并通过 allow + updatedInput 跳过权限询问.
-- profile 默认允许读, 网络和进程, 只收紧文件写入: 可写范围 = 当前工作区 + /tmp + 系统临时目录 + 常见包管理缓存目录.
-- 两类调用不包装, 交回 ZCode 原有权限流程: 模型显式提权请求 (dangerouslyDisableSandbox), 以及敏感命令 (sudo / ssh 族 / rsync / 递归 rm).
+- wrap-bash.py (matcher: Bash): 把命令包装成 `sandbox-exec -f workspace-write.sb -D WORKSPACE=<cwd> sh -c '<原命令>'`, 并通过 allow + updatedInput 跳过权限询问.
+- guard-edit.py (matcher: Write|Edit): 编辑目标在当前项目内则返回 allow 免询问; 项目之外不拦截, 交回用户确认. 项目目录经 ZCODE_PROJECT_DIR 传入.
+- profile 默认允许读, 网络和进程, 只收紧文件写入: 可写范围 = 当前工作区 + /tmp + 系统临时目录 + 常见包管理缓存目录, 且全局拒绝写 .git.
+- 以下调用不拦截, 交回 ZCode 原有权限流程: 模型显式提权请求 (dangerouslyDisableSandbox), 以及敏感命令 (sudo / ssh 族 / rsync / 递归 rm).
 
 ## 安装
 
