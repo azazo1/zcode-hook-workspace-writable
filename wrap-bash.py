@@ -15,7 +15,7 @@ import sys
 
 PROFILE = os.path.expanduser("~/.zcode/hooks/workspace-write.sb")
 
-SENSITIVE = re.compile(r"(^|[;&|]\s*)(sudo|ssh|scp|sftp|rsync|ssh-copy-id)\b")
+SENSITIVE = re.compile(r"(^|[;&|]\s*)(sudo|ssh|scp|sftp|rsync|ssh-copy-id)\b", re.MULTILINE)
 
 
 def main() -> None:

@@ -1,14 +1,14 @@
 (version 1)
 (allow default)
 (deny file-write*)
-(deny file-write*
-  (regex #"(^|/)\.git(/|$)"))
 (allow file-write*
   (subpath (param "WORKSPACE"))
   (subpath "/private/tmp")
   (subpath "/tmp")
   (subpath "/dev")
   (regex #"^/private/var/folders/"))
+(deny file-write*
+  (regex #"(^|/)\.git(/|$)"))
 (allow file-write*
   (regex #"^/Users/[^/]+/\.cache/")
   (regex #"^/Users/[^/]+/\.cargo/")
@@ -19,9 +19,9 @@
   (regex #"^/Users/[^/]+/Library/Caches/")
   (regex #"^/Users/[^/]+/Library/pnpm/"))
 (deny file-read*
-  (regex #"^/Users/[^/]+/\.config/(gh|tea)/")
-  (regex #"^/Users/[^/]+/\.ssh/")
-  (regex #"^/Users/[^/]+/\.docker/")
+  (regex #"^/Users/[^/]+/\.config/(gh|tea)(/|$)")
+  (regex #"^/Users/[^/]+/\.ssh(/|$)")
+  (regex #"^/Users/[^/]+/\.docker(/|$)")
   (regex #"^/Users/[^/]+/\.netrc$")
   (regex #"^/Users/[^/]+/\.git-credentials"))
 (deny network-outbound)
