@@ -6,7 +6,7 @@
 
 - wrap-bash.py (matcher: Bash): 把命令包装成 `sandbox-exec -f workspace-write.sb -D WORKSPACE=<cwd> sh -c '<原命令>'`, 并通过 allow + updatedInput 跳过权限询问.
 - guard-edit.py (matcher: Write|Edit): 编辑目标在当前项目内则返回 allow 免询问; 项目之外不拦截, 交回用户确认. 项目目录经 ZCODE_PROJECT_DIR 传入.
-- profile 默认允许读, 网络和进程, 只收紧文件写入: 可写范围 = 当前工作区 + /tmp + 系统临时目录 + 常见包管理缓存目录, 且全局拒绝写 .git.
+- profile 默认允许读和进程, 文件写入收紧到项目, 临时目录和包管理缓存目录, 且全局拒绝 .git (缓存目录内的 .git 除外); 凭证文件 (.ssh, .config/gh, .config/tea, .docker, .netrc, .git-credentials) 禁止读取; unix socket 出站被禁而 TCP/UDP 不受影响, 因此 gh/tea 在沙箱内无授权, docker 不可用.
 - 以下调用不拦截, 交回 ZCode 原有权限流程: 模型显式提权请求 (dangerouslyDisableSandbox), 以及敏感命令 (sudo / ssh 族 / rsync).
 
 ## 安装
